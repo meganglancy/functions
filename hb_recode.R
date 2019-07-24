@@ -23,6 +23,7 @@ hb_recode <- function(hb_in, recode_to = "long", and_choice = "and") {
       hb_in %in% c("S08000012", "S08000026", "SH", "SHT", "SHETLAND") ~ "SH",
       hb_in %in% c("S08000013", "S08000027", "S08000030", "TY", "TAY", "TAYSIDE") ~ "TY",
       hb_in %in% c("S08000014", "S08000028", "WI", "WESTERN ISLES") ~ "WI",
+      hb_in %in% c("SCOTLAND") ~ "Scotland",
       TRUE ~ hb_in)
     
   }
@@ -42,6 +43,7 @@ hb_recode <- function(hb_in, recode_to = "long", and_choice = "and") {
       hb_in %in% c("S08000012", "S08000026", "SH", "SHT", "SHETLAND") ~ "Shetland",
       hb_in %in% c("S08000013", "S08000027", "S08000030", "TY", "TAY", "TAYSIDE") ~ "Tayside",
       hb_in %in% c("S08000014", "S08000028", "WI", "WESTERN ISLES") ~ "Western Isles",
+      hb_in %in% c("SCOTLAND") ~ "Scotland",
       TRUE ~ hb_in) %>% 
       stringr::str_replace_all(., "(\\&|\\band\\b)", and_choice)
   }
