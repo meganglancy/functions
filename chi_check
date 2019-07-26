@@ -95,3 +95,4 @@ check_chi <- function(chi, report = TRUE, print = FALSE) {
 # check_chi(test1)
 # test2 <- c(1411745663, NA, NA, "", 2610860749, "0101011234")
 # check_chi(test2)
+# copyright Alan Yeung
