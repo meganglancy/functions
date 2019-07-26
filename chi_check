@@ -1,98 +1,106 @@
+# Various checks for the validity of CHI numbers
 check_chi <- function(chi, report = TRUE, print = FALSE) {
-  
-  # Output vectors
-  chi_orig <- chi
-  valid_chi <- integer(length(chi))  
-  comment <- character(length(chi))
-  
-  # Coerce CHI to character if required
-  if (class(chi) != "character") {
-    chi <- as.character(chi)
-  }
-  
-  # Blanks
-  blanks <- !grepl("[A-Z]|[a-z]|[0-9]|[[:punct:]]", chi) | is.na(chi) | chi == ""
-  letters <- grepl("[A-Z]|[a-z]|[[:punct:]]", chi)
-  
-  # CHI must be 10 digits
-  # If 9 digits, then assume leading zero has been missed
-  length_chi <- nchar(chi)
-  wrong_length <- (length_chi < 9L | length_chi > 10L) & !(blanks | letters)
-  
-  # Append leading zero
-  sel <- (!blanks & !letters) & !wrong_length
-  chi[sel & length_chi == 9L] <- paste0("0", chi[sel & length_chi == 9L])
-  
-  # Recalculate length
-  length_chi2 <- nchar(chi)
-  sel <- sel & length_chi2 == 10 
-  
-  # First 2 digits must be a day of the month
-  # 3rd and 4th digits must be a month of the year  
-  bday <- substr(chi[sel], 1, 2)
-  bmonth <- substr(chi[sel], 3, 4)
-  # Use any leap year to allow 29th Feb  
-  invalid_dob <- is.na(as.Date(paste0("2012", bmonth, bday), "%Y%m%d"))
-  
-  # Update selection to include only those with valid dates of birth
-  sel_invalid_dob <- rep(FALSE, length(chi))  # Used for output vectors
-  sel_invalid_dob[sel] <- invalid_dob    
-  sel[sel] <- !invalid_dob
-  
-  # Modulus 11 algorithm
-  # see http://systems.hscic.gov.uk/nhsnumber/stafffaqs.pdf page 25   
-  chinum <- as.numeric(chi[sel])
-  
-  lhs <- 11 * (1 + floor(
-    (floor(chinum / 1000000000) * 10
-     + (floor(chinum / 100000000) - (floor(chinum / 1000000000) * 10)) * 9
-     + (floor(chinum / 10000000) - (floor(chinum / 100000000) * 10)) * 8
-     + (floor(chinum / 1000000) - (floor(chinum / 10000000) * 10)) * 7
-     + (floor(chinum / 100000) - (floor(chinum / 1000000) * 10)) * 6
-     + (floor(chinum / 10000) - (floor(chinum / 100000) * 10)) * 5
-     + (floor(chinum / 1000) - (floor(chinum / 10000) * 10)) * 4
-     + (floor(chinum / 100) - (floor(chinum / 1000) * 10)) * 3
-     + (floor(chinum / 10) - (floor(chinum / 100) * 10)) * 2) / 11)) - 
-    (floor(chinum / 1000000000) * 10
-     + (floor(chinum / 100000000) - (floor(chinum / 1000000000) * 10)) * 9
-     + (floor(chinum / 10000000) - (floor(chinum / 100000000) * 10)) * 8
-     + (floor(chinum / 1000000) - (floor(chinum / 10000000) * 10)) * 7
-     + (floor(chinum / 100000) - (floor(chinum / 1000000) * 10)) * 6
-     + (floor(chinum / 10000) - (floor(chinum / 100000) * 10)) * 5
-     + (floor(chinum / 1000) - (floor(chinum / 10000) * 10)) * 4
-     + (floor(chinum / 100) - (floor(chinum / 1000) * 10)) * 3
-     + (floor(chinum / 10) - (floor(chinum / 100) * 10)) * 2)
-  
-  remainder <- chinum - floor(chinum / 10) * 10
-  
-  pass_check <- lhs == remainder | (lhs == 11 & remainder == 0)
-  valid_chi[sel] <- ifelse(pass_check, 1, 0)
-  comment[valid_chi == 1] <- "valid"
-  comment[valid_chi == 0] <- "failed check digit"
-  comment[blanks] <- "missing"
-  comment[letters] <- "letters"
-  comment[wrong_length] <- "wrong number of digits"
-  comment[sel_invalid_dob] <- "invalid dob"
-  
-  
-  if (report) {
-    cat(sum(valid_chi), "valid CHI\n")
-    cat(sum(blanks), "missing CHI\n")
-    cat(sum(letters), "with letters\n")
-    cat(sum(wrong_length), "with wrong number of digits\n")
-    cat(sum(invalid_dob), "with invalid date of birth in CHI\n")
-    cat(sum(!pass_check), "failed check digit test\n\n")
-  }
-  
-  out <- data.frame(chi = chi_orig, valid = valid_chi, comment = comment,
-                    stringsAsFactors = FALSE)
-  
-  if (print) out else invisible(out)
+    
+    # Output vectors
+    chi_orig <- chi
+    valid_chi <- integer(length(chi))  
+    comment <- character(length(chi))
+    
+    # Coerce CHI to character if required
+    if (class(chi) != "character") {
+        chi <- as.character(chi)
+    }
+    
+    # Blanks
+    blanks <- !grepl("[A-Z]|[a-z]|[0-9]|[[:punct:]]", chi) | is.na(chi) | chi == ""
+    letters <- grepl("[A-Z]|[a-z]|[[:punct:]]", chi)
+    
+    # CHI must be 10 digits
+    # If 9 digits, then assume leading zero has been missed
+    length_chi <- nchar(chi)
+    wrong_length <- (length_chi < 9L | length_chi > 10L) & !(blanks | letters)
+    
+    # Append leading zero
+    sel <- (!blanks & !letters) & !wrong_length
+    chi[sel & length_chi == 9L] <- paste0("0", chi[sel & length_chi == 9L])
+    
+    # Recalculate length
+    length_chi2 <- nchar(chi)
+    sel <- sel & length_chi2 == 10 
+    
+    # First 2 digits must be a day of the month
+    # 3rd and 4th digits must be a month of the year  
+    bday <- substr(chi[sel], 1, 2)
+    bmonth <- substr(chi[sel], 3, 4)
+    # Use any leap year to allow 29th Feb  
+    invalid_dob <- is.na(as.Date(paste0("2012", bmonth, bday), "%Y%m%d"))
+    
+    if (any(paste0(bday, bmonth) == "2902")) {
+      sel_leap <- which(paste0(bday, bmonth) == "2902")
+      byear <- substr(chi[sel][sel_leap], 5, 6)
+      byear <- paste0("19", byear) # leap years always happen every 100 years anyway
+      leap_check <- lubridate::leap_year(as.integer(byear))
+      
+      invalid_dob[sel_leap] <- !leap_check
+    }
+    
+    # Update selection to include only those with valid dates of birth
+    sel_invalid_dob <- rep(FALSE, length(chi))  # Used for output vectors
+    sel_invalid_dob[sel] <- invalid_dob    
+    sel[sel] <- !invalid_dob
+    
+    # Modulus 11 algorithm
+    # see http://systems.hscic.gov.uk/nhsnumber/stafffaqs.pdf page 25   
+    chinum <- as.numeric(chi[sel])
+    
+    lhs <- 11 * (1 + floor(
+        (floor(chinum / 1000000000) * 10
+         + (floor(chinum / 100000000) - (floor(chinum / 1000000000) * 10)) * 9
+         + (floor(chinum / 10000000) - (floor(chinum / 100000000) * 10)) * 8
+         + (floor(chinum / 1000000) - (floor(chinum / 10000000) * 10)) * 7
+         + (floor(chinum / 100000) - (floor(chinum / 1000000) * 10)) * 6
+         + (floor(chinum / 10000) - (floor(chinum / 100000) * 10)) * 5
+         + (floor(chinum / 1000) - (floor(chinum / 10000) * 10)) * 4
+         + (floor(chinum / 100) - (floor(chinum / 1000) * 10)) * 3
+         + (floor(chinum / 10) - (floor(chinum / 100) * 10)) * 2) / 11)) - 
+        (floor(chinum / 1000000000) * 10
+         + (floor(chinum / 100000000) - (floor(chinum / 1000000000) * 10)) * 9
+         + (floor(chinum / 10000000) - (floor(chinum / 100000000) * 10)) * 8
+         + (floor(chinum / 1000000) - (floor(chinum / 10000000) * 10)) * 7
+         + (floor(chinum / 100000) - (floor(chinum / 1000000) * 10)) * 6
+         + (floor(chinum / 10000) - (floor(chinum / 100000) * 10)) * 5
+         + (floor(chinum / 1000) - (floor(chinum / 10000) * 10)) * 4
+         + (floor(chinum / 100) - (floor(chinum / 1000) * 10)) * 3
+         + (floor(chinum / 10) - (floor(chinum / 100) * 10)) * 2)
+    
+    remainder <- chinum - floor(chinum / 10) * 10
+    
+    pass_check <- lhs == remainder | (lhs == 11 & remainder == 0)
+    valid_chi[sel] <- ifelse(pass_check, 1, 0)
+    comment[valid_chi == 1] <- "valid"
+    comment[valid_chi == 0] <- "failed check digit"
+    comment[blanks] <- "missing"
+    comment[letters] <- "letters"
+    comment[wrong_length] <- "wrong number of digits"
+    comment[sel_invalid_dob] <- "invalid dob"
+    
+    
+    if (report) {
+        cat(sum(valid_chi), "valid CHI\n")
+        cat(sum(blanks), "missing CHI\n")
+        cat(sum(letters), "with letters\n")
+        cat(sum(wrong_length), "with wrong number of digits\n")
+        cat(sum(invalid_dob), "with invalid date of birth in CHI\n")
+        cat(sum(!pass_check), "failed check digit test\n\n")
+    }
+    
+    out <- tibble::tibble(chi = chi_orig, 
+                          valid = valid_chi, 
+                          comment = comment)
+    
+    if (print) out else invisible(out)
 }
 
-# test1 <- c(1411745663, NA, NA, "", 2610860749, 
-#            "261086074a", 1234, 123451234512, 510768407, 170598306)
-# check_chi(test1)
-# test2 <- c(1411745663, NA, NA, "", 2610860749, "0101011234")
-# check_chi(test2)
-# copyright Alan Yeung
+# Copyright Alan Yeung
+  
+  
