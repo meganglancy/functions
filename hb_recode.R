@@ -34,7 +34,7 @@ hb_recode <- function(hb_in, recode_to = "long", and_choice = "and") {
       hb_in %in% c("S08000003", "S08000017", "DG", "DUMFRIES AND GALLOWAY", "DUMFRIES & GALLOWAY") ~ "Dumfries and Galloway",
       hb_in %in% c("S08000004", "S08000018", "S08000029", "FF", "FIFE") ~ "Fife",
       hb_in %in% c("S08000005", "S08000019", "FV", "FORTH VALLEY") ~ "Forth Valley",
-      hb_in %in% c("S08000007", "S08000021", "S08000031", "GGC", "GC", "GGHB", "GREATER GLASGOW AND CLYDE", "GREATER GLASGOW & CLYDE") ~ "Greater Glasgow and Clyde",
+      hb_in %in% c("S08000007", "S08000021", "S08000031", "GGC", "GC", "GG", "GGHB", "GREATER GLASGOW AND CLYDE", "GREATER GLASGOW & CLYDE") ~ "Greater Glasgow and Clyde",
       hb_in %in% c("S08000006", "S08000020", "GR", "GRA", "GRAMPIAN") ~ "Grampian",
       hb_in %in% c("S08000008", "S08000022", "HG", "HIG", "HIGHLAND", "HIGHLANDS") ~ "Highland",
       hb_in %in% c("S08000009", "S08000023", "S08000032", "LN", "LAN", "LANARKSHIRE") ~ "Lanarkshire",
