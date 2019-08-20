@@ -1,0 +1,9 @@
+soundex <- function(sname) {
+  # Uses phonetic soundex algorithm used by the National Archives
+  # May differ from the one used by CDC -- not sure
+  require(stringdist)
+  
+  # Convert 'St ' or 'St.' to 'Saint' first
+  sname <- gsub("^St[ \\.]", "Saint ", sname, ignore.case = TRUE)
+  phonetic(sname)
+}
