@@ -1,0 +1,9 @@
+# Function to calculate ages
+
+calculate_age <- function(dob, date_of_interest) {
+    lubridate::interval(dob, date_of_interest) %>% 
+        lubridate::as.period() %>% 
+        lubridate::year()
+}
+
+# Copyright Alan Yeung
