@@ -1,0 +1,1 @@
+z_rows <- which(1:nrow(z) %% 2 == 1)
