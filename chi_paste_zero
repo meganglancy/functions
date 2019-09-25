@@ -1,0 +1,7 @@
+# Paste 0 is CHI is only 9 numbers
+
+chi_paste_zero <- function(chi){
+  
+  ifelse(nchar(chi) == 9, paste0("0", chi), chi)
+
+}
