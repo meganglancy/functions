@@ -3,6 +3,8 @@
 clean_name_fields <- function(name_var){
   
   name_var <- toupper(name_var)
+  name_var <- stringr::str_trim(name_var)
+  name_var <- stringr::str_squish(name_var)
   
   ifelse(stringr::str_detect(name_var, "(^.$|^ANON|^X$|^NK$|U/K|^STI$|^UNK$|^PAITENT$|UNKNOWN|FEMALE|^MALE$|^GUM$|HEALTH|[0-9]|^BABY$)"), "", name_var)
   
