@@ -1,0 +1,53 @@
+
+library(tidyverse)
+library(assertr)
+
+z_cars <- mtcars %>% 
+  rownames_to_column("car_model") %>% 
+  mutate(car_make = word(car_model, 1)) %>% 
+  select(car_make, car_model, everything()) %>% 
+  mutate(car_make = if_else(car_make %in% c("Cadillac", "Fiat", "Ford"), NA_character_, car_make))
+
+z_cars_mpg <- z_cars %>% 
+  select(car_make, car_model, mpg)
+
+z_cars2 <- z_cars %>% 
+  select(-mpg)
+
+
+# rejoin to create original dataset ---------------------------------------
+
+z_cars3 <- z_cars2 %>% 
+  left_join(z_cars_mpg, "car_make")
+
+z_cars4 <- z_cars2 %>% 
+  filter(!is.na(car_make)) %>% 
+  left_join(z_cars_mpg, "car_make")
+
+
+
+# Function ----------------------------------------------------------------
+
+safe_join <- function(dataset1, dataset2, by){
+  
+  dataset2 %>% 
+    assert(not_na, {{by}}) %>% 
+    assert(is_uniq, {{by}})
+  
+  final_dataset <- left_join(dataset1, dataset2, by = by) %>%
+    verify(nrow(final_dataset) == nrow(dataset1))
+  
+  return(final_dataset)
+  
+}
+
+z <- z_cars_mpg %>% filter(!is.na(car_make)) %>% distinct(car_make, .keep_all = T)
+
+z_cars6 <- z_cars2 %>% 
+  safe_join(z_cars_mpg %>% 
+              filter(!is.na(car_make)) %>% 
+              distinct(car_make, .keep_all = T), 
+            by = "car_make")
+
+
+
