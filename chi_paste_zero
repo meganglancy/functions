@@ -2,6 +2,6 @@
 
 chi_paste_zero <- function(chi){
   
-  ifelse(nchar(chi) == 9, paste0("0", chi), chi)
+  ifelse(nchar(chi) == 9, paste0("0", chi), as.character(chi))
 
 }
