@@ -1,0 +1,15 @@
+# Use assertr functions to check dataset before joining
+# tidyverse should be loaded
+
+safe_left_join <- function(dataset1, dataset2, by) {
+  
+  dataset2 %>% 
+    assertr::assert(assertr::not_na, by) %>% 
+    assertr::assert(assertr::is_uniq, by)
+  
+  final_dataset <- left_join(dataset1, dataset2, by = by) %>%
+    assertr::verify(nrow(.) == nrow(dataset1))
+  
+  return(final_dataset)
+  
+}
