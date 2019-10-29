@@ -1,0 +1,13 @@
+load_bbv_data <- function(dataset){
+  
+  if (dataset %in% c("gro", "smr01")) {
+  file_path_chr <- paste0(file.path("F:", "PHI", "SHPN-PA", "01 SHBBV", "Projects", "BBV Linked Data", "06 Data", "2019", "Annual Linkage", "RDS files"), "/", dataset, ".rds")
+  }
+  
+  else if (dataset == "hcv diagnosis") {
+    file_path_chr <- paste0(file.path("F:", "PHI", "SHPN-PA", "01 SHBBV", "Surveillance", "Hepatitis C Diagnosis", "03 Data", "Database", "Decemeber 2018", "HCVDxTo2018_linked2.rds"))
+  } 
+  
+  readRDS(file_path_chr)
+  
+}
