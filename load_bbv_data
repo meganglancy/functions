@@ -1,13 +1,28 @@
+
+# Load BBV datasets
+
 load_bbv_data <- function(dataset){
   
+  if (!dataset %in% c("gro", "smr01", "hcv diagnosis", "hcv clinical")) {
+    rlang::abort("Only possible datasets: gro, smr01, hcv diagnosis, hcv clinical")
+  }
+    
   if (dataset %in% c("gro", "smr01")) {
-  file_path_chr <- paste0(file.path("F:", "PHI", "SHPN-PA", "01 SHBBV", "Projects", "BBV Linked Data", "06 Data", "2019", "Annual Linkage", "RDS files"), "/", dataset, ".rds")
+    file_path_chr <- paste0(file.path("F:", "PHI", "SHPN-PA", "01 SHBBV", "Projects", "BBV Linked Data", "06 Data", "2019", "Annual Linkage", "RDS files"), "/", dataset, ".rds")
+    
+    return(readRDS(file_path_chr))
   }
   
-  else if (dataset == "hcv diagnosis") {
+  if (dataset == "hcv diagnosis") {
     file_path_chr <- paste0(file.path("F:", "PHI", "SHPN-PA", "01 SHBBV", "Surveillance", "Hepatitis C Diagnosis", "03 Data", "Database", "December 2018", "HCVDxTo2018_linked2.rds"))
+    
+    return(readRDS(file_path_chr))
   } 
   
-  readRDS(file_path_chr)
+  if (dataset == "hcv clinical") {
+    file_path_chr <- paste0(file.path("F:", "PHI", "SHPN-PA", "01 SHBBV", "Surveillance", "Hepatitis C Clinical", "03 Data", "Database", "2019 Clinical Data", "CENTRAL DATABASE 2019.RData"))
+    
+    load(file_path_chr, envir = .GlobalEnv)
+  }
   
 }
