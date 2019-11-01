@@ -27,6 +27,9 @@ hb_recode <- function(hb_in, recode_to = "long", and_choice = "and") {
       hb_in %in% c("S08200002") ~ "No Fixed Abode",
       hb_in %in% c("S08200003") ~ "Not Known",
       hb_in %in% c("S08200004") ~ "Outside U.K.",
+      hb_in %in% c("S08100001") ~ "National Facility",
+      hb_in %in% c("S08100008") ~ "The State Hospital",
+      hb_in %in% c("S27000001") ~ "Non-NHS Provider/Location",
       hb_in %in% c("SCOTLAND") ~ "Scotland",
       TRUE ~ hb_in)
     
@@ -51,6 +54,9 @@ hb_recode <- function(hb_in, recode_to = "long", and_choice = "and") {
       hb_in %in% c("S08200002") ~ "No Fixed Abode",
       hb_in %in% c("S08200003") ~ "Not Known",
       hb_in %in% c("S08200004") ~ "Outside U.K.",
+      hb_in %in% c("S08100001") ~ "National Facility",
+      hb_in %in% c("S08100008") ~ "The State Hospital",
+      hb_in %in% c("S27000001") ~ "Non-NHS Provider/Location",
       hb_in %in% c("SCOTLAND") ~ "Scotland",
       TRUE ~ hb_in) %>% 
       stringr::str_replace_all(., "(\\&|\\band\\b)", and_choice)
