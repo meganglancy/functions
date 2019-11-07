@@ -3,11 +3,11 @@
 
 load_bbv_data <- function(dataset){
   
-  if (!dataset %in% c("gro", "smr01", "hcv diagnosis", "hcv clinical")) {
-    rlang::abort("Only possible datasets: gro, smr01, hcv diagnosis, hcv clinical")
+  if (!dataset %in% c("gro", "smr01", "hcv diagnosis", "hcv clinical", "hps_isd_upi_lookup")) {
+    rlang::abort("Only possible datasets: gro, smr01, hcv diagnosis, hcv clinical, hps_isd_upi_lookup")
   }
     
-  if (dataset %in% c("gro", "smr01")) {
+  if (dataset %in% c("gro", "smr01", "hps_isd_upi_lookup")) {
     file_path_chr <- paste0(file.path("F:", "PHI", "SHPN-PA", "01 SHBBV", "Projects", "BBV Linked Data", "06 Data", "2019", "Annual Linkage", "RDS files"), "/", dataset, ".rds")
     
     return(readRDS(file_path_chr))
